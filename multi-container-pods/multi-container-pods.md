@@ -61,3 +61,13 @@ cat /usr/share/nginx/html/index.html
 kubectl exec -it  multi-cont-pod -c sidecar-container -- sh
 # apt-get update && apt-get install -y curl
 # curl localhost
+You will see following output:
+`Hi I am from Main container
+Hi I am from Main container
+Hi I am from Main container
+Hi I am from Main container
+Hi I am from Main container
+Hi I am from Main container
+Hi I am from Main container
+Hi I am from Main container
+Hi I am from Main container`
