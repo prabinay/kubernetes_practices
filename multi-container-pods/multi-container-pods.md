@@ -1,3 +1,8 @@
+# Multi-Container Pods (10%)
+## Practice questions based on these concepts
+
+## Understand multi-container pod design patterns (eg: ambassador, adaptor, sidecar)
+
 29. Create a Pod with three busy box containers with commands “ls; sleep 3600;”, “echo Hello World; sleep 3600;” and “echo this is the third container; sleep 3600” respectively and check the status
 
 // first create single container pod with dry run flag  
