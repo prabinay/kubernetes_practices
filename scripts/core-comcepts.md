@@ -1,8 +1,10 @@
-Practice questions based on these concepts
+# Core Concepts (13%)
+## Practice questions based on these concepts
 
-Understand Kubernetes API Primitives
-Create and Configure Basic Pods
-List all the namespaces in the cluster
+### Understand Kubernetes API Primitives
+### Create and Configure Basic Pods
+
+1. List all the namespaces in the cluster
 kubectl get namespaces
 kubectl get ns
 2. List all the pods in all namespaces
