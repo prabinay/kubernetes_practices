@@ -2,97 +2,90 @@
 
 
 ### Practice questions based on these concepts
-
-Understand ConfigMaps
-Understand SecurityContexts
-Define an application’s resource requirements
-Create & Consume Secrets
-Understand ServiceAccounts
+1. Understand ConfigMaps
+2. Understand SecurityContexts
+3. Define an application’s resource requirements
+4. Create & Consume Secrets
+5. Understand ServiceAccounts
 
 ### Note: ConfigMap is an API object used to store and manage configuration data for applications. It provides a way to separate configuration data from application code, allowing for easier management and customization of application settings.
 
-105. List all the configmaps in the cluster
+105. List all the configmaps in the cluster  
+`kubectl get cm`  
+     or  
+`kubectl get configmap`  
 
-kubectl get cm
-     or
-kubectl get configmap
-106. Create a configmap called myconfigmap with literal value appname=myapp
+106. Create a configmap called myconfigmap with literal value appname=myapp  
+`kubectl create cm myconfigmap --from-literal=appname=myapp`  
 
-kubectl create cm myconfigmap --from-literal=appname=myapp
-107. Verify the configmap we just created has this data
+107. Verify the configmap we just created has this data  
+you will see under data
+`kubectl get cm -o yaml`  
+         or  
+`kubectl describe cm`  
 
-// you will see under data
-kubectl get cm -o yaml
-         or
-kubectl describe cm
-108. delete the configmap myconfigmap we just created
+108. delete the configmap myconfigmap we just created  
+`kubectl delete cm myconfigmap`  
 
-kubectl delete cm myconfigmap
-109. Create a file called config.txt with two values key1=value1 and key2=value2 and verify the file
+109. Create a file called config.txt with two values key1=value1 and key2=value2 and verify the file  
+`cat >> config.txt << EOF  
+key1=value1  
+key2=value2  
+EOF  
+cat config.txt`
 
-cat >> config.txt << EOF
-key1=value1
-key2=value2
-EOF
-cat config.txt
-110. Create a configmap named keyvalcfgmap and read data from the file config.txt and verify that configmap is created correctly
+110. Create a configmap named keyvalcfgmap and read data from the file config.txt and verify that configmap is created correctly  
+`kubectl create cm keyvalcfgmap --from-file=config.txt  
+kubectl get cm keyvalcfgmap -o yaml`
 
-kubectl create cm keyvalcfgmap --from-file=config.txt
-kubectl get cm keyvalcfgmap -o yaml
-111. Create an nginx pod and load environment values from the above configmap keyvalcfgmap and exec into the pod and verify the environment variables and delete the pod
+111. Create an nginx pod and load environment values from the above configmap keyvalcfgmap and exec into the pod and verify the environment variables and delete the pod  
+first run this command to save the pod yml
+`kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > nginx-pod.yml`
+edit the yml to below file and create
+`kubectl create -f nginx-pod.yml`
+verify  
+`kubectl exec -it nginx -- env  
+kubectl delete po nginx`
 
-// first run this command to save the pod yml
-kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > nginx-pod.yml
-// edit the yml to below file and create
-kubectl create -f nginx-pod.yml
-// verify
-kubectl exec -it nginx -- env
-kubectl delete po nginx
 
-nginx-pod.yml
-112. Create an env file file.env with var1=val1 and create a configmap envcfgmap from this env file and verify the configmap
+112. Create an env file file.env with var1=val1 and create a configmap envcfgmap from this env file and verify the configmap  
+`echo var1=val1 > file.env  
+cat file.env  
+kubectl create cm envcfgmap --from-env-file=file.env  
+kubectl get cm envcfgmap -o yaml --export`  
 
-echo var1=val1 > file.env
-cat file.env
-kubectl create cm envcfgmap --from-env-file=file.env
-kubectl get cm envcfgmap -o yaml --export
-113. Create an nginx pod and load environment values from the above configmap envcfgmap and exec into the pod and verify the environment variables and delete the pod
+113. Create an nginx pod and load environment values from the above configmap envcfgmap and exec into the pod and verify the environment variables and delete the pod  
+first run this command to save the pod yml
+`kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > nginx-pod.yml`
+edit the yml to below file and create
+`kubectl create -f nginx-pod.yml`  
+verify  
+`kubectl exec -it nginx -- env  
+kubectl delete po nginx`  
 
-// first run this command to save the pod yml
-kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > nginx-pod.yml
-// edit the yml to below file and create
-kubectl create -f nginx-pod.yml
-// verify
-kubectl exec -it nginx -- env
-kubectl delete po nginx
+114. Create a configmap called cfgvolume with values var1=val1, var2=val2 and create an nginx pod with volume nginx-volume which reads data from this configmap cfgvolume and put it on the path /etc/cfg  
+first create a configmap cfgvolume   
+`kubectl create cm cfgvolume --from-literal=var1=val1 --from-literal=var2=val2`  
+verify the configmap  
+`kubectl describe cm cfgvolume`  
+create the config map 
+`kubectl create -f nginx-volume.yml`  
+exec into the pod  
+`kubectl exec -it nginx -- /bin/sh`  
+check the path  
+`cd /etc/cfg  
+ls`
 
-nginx-pod.yaml
-114. Create a configmap called cfgvolume with values var1=val1, var2=val2 and create an nginx pod with volume nginx-volume which reads data from this configmap cfgvolume and put it on the path /etc/cfg
 
-// first create a configmap cfgvolume
-kubectl create cm cfgvolume --from-literal=var1=val1 --from-literal=var2=val2
-// verify the configmap
-kubectl describe cm cfgvolume
-// create the config map 
-kubectl create -f nginx-volume.yml
-// exec into the pod
-kubectl exec -it nginx -- /bin/sh
-// check the path
-cd /etc/cfg
-ls
+115. Create a pod called secbusybox with the image busybox which executes command sleep 3600 and makes sure any Containers in the Pod, all processes run with user ID 1000 and with group id 2000 and verify.  
+create yml file with dry-run  
+`kubectl run secbusybox --image=busybox --restart=Never --dry-run -o yaml -- /bin/sh -c "sleep 3600;" > busybox.yml`
+edit the pod like below and create
+`kubectl create -f busybox.yml`
+verify
+`kubectl exec -it secbusybox -- sh  
+id `// it will show the id and group  
 
-nginx-volume.yml
-115. Create a pod called secbusybox with the image busybox which executes command sleep 3600 and makes sure any Containers in the Pod, all processes run with user ID 1000 and with group id 2000 and verify.
-
-// create yml file with dry-run
-kubectl run secbusybox --image=busybox --restart=Never --dry-run -o yaml -- /bin/sh -c "sleep 3600;" > busybox.yml
-// edit the pod like below and create
-kubectl create -f busybox.yml
-// verify
-kubectl exec -it secbusybox -- sh
-id // it will show the id and group
-
-busybox.yml
 116. Create the same pod as above this time set the securityContext for the container as well and verify that the securityContext of container overrides the Pod level securityContext.
 
 // create yml file with dry-run
