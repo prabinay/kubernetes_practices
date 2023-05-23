@@ -1,8 +1,8 @@
 29. Create a Pod with three busy box containers with commands “ls; sleep 3600;”, “echo Hello World; sleep 3600;” and “echo this is the third container; sleep 3600” respectively and check the status
 
-// first create single container pod with dry run flag
- `kubectl run busybox --image=busybox --restart=Never --dry-run -o yaml -- bin/sh -c "sleep 3600; ls" > multi-container.yaml`
-// edit the pod to following yaml and create it
+// first create single container pod with dry run flag  
+`kubectl run busybox --image=busybox --restart=Never --dry-run -o yaml -- bin/sh -c "sleep 3600; ls" > multi-container.yaml`
+// edit the pod to following yaml and create it  
 `kubectl create -f multi-container.yaml`
 `kubectl get po busybox`
 
