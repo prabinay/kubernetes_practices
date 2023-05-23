@@ -1,7 +1,9 @@
-## State Persistence (8%)
-Practice questions based on these concepts
+# State Persistence (8%)
+### Practice questions based on these concepts
+### Understand PersistentVolumeClaims for Storage
 
-Understand PersistentVolumeClaims for Storage
+### Note: Persistent Volumes (PVs) provide a way to abstract and manage storage resources in a cluster. They are used to provide durable storage for applications and decouple storage from individual pods. Persistent Volumes (PVs) provide a way to abstract and manage storage resources in a cluster. They are used to provide durable storage for applications and decouple storage from individual pods. 
+
 96. List Persistent Volumes in the cluster
 
 kubectl get pv

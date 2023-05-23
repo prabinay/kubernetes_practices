@@ -1,3 +1,16 @@
+# Configuration (18%)
+
+
+### Practice questions based on these concepts
+
+Understand ConfigMaps
+Understand SecurityContexts
+Define an application’s resource requirements
+Create & Consume Secrets
+Understand ServiceAccounts
+
+### Note: ConfigMap is an API object used to store and manage configuration data for applications. It provides a way to separate configuration data from application code, allowing for easier management and customization of application settings.
+
 105. List all the configmaps in the cluster
 
 kubectl get cm

@@ -105,6 +105,12 @@ kubectl get pods -l app=webapp
 
 kubectl scale deploy webapp --replicas=20
 kubectl get po -l app=webapp
+
+### Note: In Kubernetes, a deployment rollout status refers to the current state of a deployment's rollout process. It provides information about the progress and success of deploying changes to a deployment's underlying pods.
+
+When a deployment is updated with new configurations, such as a new image version or desired replica count, Kubernetes orchestrates a rollout process to ensure the changes are applied gradually and with minimal disruption to the running application. The rollout process includes scaling up/down replicas, updating pods, and monitoring the status of the deployment. 
+
+
 63. Get the deployment rollout status
 
 kubectl rollout status deploy webapp
@@ -235,6 +241,9 @@ hello-job.yaml
 kubectl get job -w
 kubectl get po
 kubectl delete job hello-job
+
+### Note:  a CronJob is a type of controller that allows you to schedule and automate the execution of Jobs on a recurring basis. It is designed to run tasks based on a cron-like syntax, similar to the popular cron utility found in Unix-like operating systems. It provides capabilities such as Scheduling, Recurring jobs, parallel execution, job management, logging and monitoring, etc. 
+
 92. Create a Cronjob with busybox image that prints date and hello from kubernetes cluster message for every minute
 
 kubectl create cronjob date-job --image=busybox --schedule="*/1 * * * *" -- bin/sh -c "date; echo Hello from kubernetes cluster"
