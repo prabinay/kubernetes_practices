@@ -1,3 +1,13 @@
+# Observability (18%)
+### Practice questions based on these concepts
+
+### Understand LivenessProbes and ReadinessProbes
+### Understand Container Logging
+### Understand how to monitor applications in kubernetes
+### Understand Debugging in Kubernetes
+
+
+
 132. Create an nginx pod with containerPort 80 and it should only receive traffic only it checks the endpoint / on port 80 and verify and delete the pod.
 
 kubectl run nginx --image=nginx --restart=Never --port=80 --dry-run -o yaml > nginx-pod.yaml
