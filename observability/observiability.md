@@ -7,7 +7,7 @@
 ### Understand Debugging in Kubernetes  
 
 132. Create an nginx pod with containerPort 80 and it should only receive traffic only it checks the endpoint / on port 80 and verify and delete the pod.  
-create nginx-pod.yaml
+create nginx-pod.yaml  
 `kubectl run nginx --image=nginx --restart=Never --port=80 --dry-run -o yaml > nginx-pod.yaml`  
 add the readinessProbe section and create  
 `kubectl create -f nginx-pod.yaml`  
