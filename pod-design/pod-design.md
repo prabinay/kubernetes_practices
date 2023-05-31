@@ -1,34 +1,34 @@
-36. Get the pods with label information
+36. Get the pods with label information  
+`kubectl get pods --show-labels`  
 
-kubectl get pods --show-labels
-37. Create 5 nginx pods in which two of them is labeled env=prod and three of them is labeled env=dev
+37. Create 5 nginx pods in which two of them is labeled env=prod and three of them is labeled env=dev  
+`kubectl run nginx-dev1 --image=nginx --restart=Never --labels=env=dev  
+kubectl run nginx-dev2 --image=nginx --restart=Never --labels=env=dev  
+kubectl run nginx-dev3 --image=nginx --restart=Never --labels=env=dev  
+kubectl run nginx-prod1 --image=nginx --restart=Never --labels=env=prod  
+kubectl run nginx-prod2 --image=nginx --restart=Never --labels=env=prod`  
 
-kubectl run nginx-dev1 --image=nginx --restart=Never --labels=env=dev
-kubectl run nginx-dev2 --image=nginx --restart=Never --labels=env=dev
-kubectl run nginx-dev3 --image=nginx --restart=Never --labels=env=dev
-kubectl run nginx-prod1 --image=nginx --restart=Never --labels=env=prod
-kubectl run nginx-prod2 --image=nginx --restart=Never --labels=env=prod
-38. Verify all the pods are created with correct labels
+38. Verify all the pods are created with correct labels  
+`kubeclt get pods --show-labels` 
 
-kubeclt get pods --show-labels
-39. Get the pods with label env=dev
+39. Get the pods with label env=dev  
+`kubectl get pods -l env=dev`  
 
-kubectl get pods -l env=dev
-40. Get the pods with label env=dev and also output the labels
+40. Get the pods with label env=dev and also output the labels  
+`kubectl get pods -l env=dev --show-labels`  
 
-kubectl get pods -l env=dev --show-labels
-41. Get the pods with label env=prod
+41. Get the pods with label env=prod  
+`kubectl get pods -l env=prod`  
 
-kubectl get pods -l env=prod
-42. Get the pods with label env=prod and also output the labels
+42. Get the pods with label env=prod and also output the labels  
+`kubectl get pods -l env=prod --show-labels`  
 
-kubectl get pods -l env=prod --show-labels
-43. Get the pods with label env
+43. Get the pods with label env  
+`kubectl get pods -L env`  
 
-kubectl get pods -L env
-44. Get the pods with labels env=dev and env=prod
+44. Get the pods with labels env=dev and env=prod  
+`kubectl get pods -l 'env in (dev,prod)'`  
 
-kubectl get pods -l 'env in (dev,prod)'
 45. Get the pods with labels env=dev and env=prod and output the labels as well
 
 kubectl get pods -l 'env in (dev,prod)' --show-labels
