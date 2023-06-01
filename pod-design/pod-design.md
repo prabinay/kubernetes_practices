@@ -29,162 +29,160 @@ kubectl run nginx-prod2 --image=nginx --restart=Never --labels=env=prod`
 44. Get the pods with labels env=dev and env=prod  
 `kubectl get pods -l 'env in (dev,prod)'`  
 
-45. Get the pods with labels env=dev and env=prod and output the labels as well
+45. Get the pods with labels env=dev and env=prod and output the labels as well  
+`kubectl get pods -l 'env in (dev,prod)' --show-labels`  
 
-kubectl get pods -l 'env in (dev,prod)' --show-labels
-46. Change the label for one of the pod to env=uat and list all the pods to verify
+46. Change the label for one of the pod to env=uat and list all the pods to verify  
+`kubectl label pod/nginx-dev3 env=uat --overwrite`  
+`kubectl get pods --show-labels`  
 
-kubectl label pod/nginx-dev3 env=uat --overwrite
-kubectl get pods --show-labels
-47. Remove the labels for the pods that we created now and verify all the labels are removed
+47. Remove the labels for the pods that we created now and verify all the labels are removed  
+`kubectl label pod nginx-dev{1..3} env-`  
+`kubectl label pod nginx-prod{1..2} env-`  
+`kubectl get po --show-labels`  
 
-kubectl label pod nginx-dev{1..3} env-
-kubectl label pod nginx-prod{1..2} env-
-kubectl get po --show-labels
-48. Let’s add the label app=nginx for all the pods and verify
+48. Let’s add the label app=nginx for all the pods and verify  
+`kubectl label pod nginx-dev{1..3} app=nginx`  
+`kubectl label pod nginx-prod{1..2} app=nginx`  
+`kubectl get po --show-labels`  
 
-kubectl label pod nginx-dev{1..3} app=nginx
-kubectl label pod nginx-prod{1..2} app=nginx
-kubectl get po --show-labels
-49. Get all the nodes with labels (if using minikube you would get only master node)
+49. Get all the nodes with labels (if using minikube you would get only master node)  
+`kubectl get nodes --show-labels`  
 
-kubectl get nodes --show-labels
-50. Label the node (minikube if you are using) nodeName=nginxnode
+50. Label the node (minikube if you are using) nodeName=nginxnode  
+`kubectl label node minikube nodeName=nginxnode`  
 
-kubectl label node minikube nodeName=nginxnode
-51. Create a Pod that will be deployed on this node with the label nodeName=nginxnode
-
-kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > pod.yaml
-// add the nodeSelector like below and create the pod
-kubectl create -f pod.yaml
-
-pod.yaml
-52. Verify the pod that it is scheduled with the node selector
-
-kubectl describe po nginx | grep Node-Selectors
-53. Verify the pod nginx that we just created has this label
-
-kubectl describe po nginx | grep Labels
-54. Annotate the pods with name=webapp
-
-kubectl annotate pod nginx-dev{1..3} name=webapp
-kubectl annotate pod nginx-prod{1..2} name=webapp
-55. Verify the pods that have been annotated correctly
-
-kubectl describe po nginx-dev{1..3} | grep -i annotations
-kubectl describe po nginx-prod{1..2} | grep -i annotations
-56. Remove the annotations on the pods and verify
-
-kubectl annotate pod nginx-dev{1..3} name-
-kubectl annotate pod nginx-prod{1..2} name-
-kubectl describe po nginx-dev{1..3} | grep -i annotations
-kubectl describe po nginx-prod{1..2} | grep -i annotations
-57. Remove all the pods that we created so far
-
-kubectl delete po --all
-58. Create a deployment called webapp with image nginx with 5 replicas
-
-kubectl create deploy webapp --image=nginx --dry-run -o yaml > webapp.yaml
-// change the replicas to 5 in the yaml and create it
-kubectl create -f webapp.yaml
-
-webapp.yaml
-59. Get the deployment you just created with labels
-
-kubectl get deploy webapp --show-labels
-60. Output the yaml file of the deployment you just created
-
-kubectl get deploy webapp -o yaml
-61. Get the pods of this deployment
-
-// get the label of the deployment
-kubectl get deploy --show-labels
-// get the pods with that label
-kubectl get pods -l app=webapp
-62. Scale the deployment from 5 replicas to 20 replicas and verify
-
-kubectl scale deploy webapp --replicas=20
-kubectl get po -l app=webapp
-
-### Note: In Kubernetes, a deployment rollout status refers to the current state of a deployment's rollout process. It provides information about the progress and success of deploying changes to a deployment's underlying pods.
-
-When a deployment is updated with new configurations, such as a new image version or desired replica count, Kubernetes orchestrates a rollout process to ensure the changes are applied gradually and with minimal disruption to the running application. The rollout process includes scaling up/down replicas, updating pods, and monitoring the status of the deployment. 
+51. Create a Pod that will be deployed on this node with the label nodeName=nginxnode  
+create pod.yaml  
+`kubectl run nginx --image=nginx --restart=Never --dry-run -o yaml > pod.yaml`   
+add the nodeSelector like below and create the pod  
+`kubectl create -f pod.yaml`  
 
 
-63. Get the deployment rollout status
+52. Verify the pod that it is scheduled with the node selector  
+`kubectl describe po nginx | grep Node-Selectors`  
 
-kubectl rollout status deploy webapp
-64. Get the replicaset that created with this deployment
+53. Verify the pod nginx that we just created has this label  
+`kubectl describe po nginx | grep Labels`  
 
-kubectl get rs -l app=webapp
-65. Get the yaml of the replicaset and pods of this deployment
+54. Annotate the pods with name=webapp  
+`kubectl annotate pod nginx-dev{1..3} name=webapp`  
+`kubectl annotate pod nginx-prod{1..2} name=webapp`  
 
-kubectl get rs -l app=webapp -o yaml
-kubectl get po -l app=webapp -o yaml
-66. Delete the deployment you just created and watch all the pods are also being deleted
+55. Verify the pods that have been annotated correctly  
+`kubectl describe po nginx-dev{1..3} | grep -i annotations`  
+`kubectl describe po nginx-prod{1..2} | grep -i annotations`  
 
-kubectl delete deploy webapp
-kubectl get po -l app=webapp -w
-67. Create a deployment of webapp with image nginx:1.17.1 with container port 80 and verify the image version
+56. Remove the annotations on the pods and verify  
+`kubectl annotate pod nginx-dev{1..3} name-`  
+`kubectl annotate pod nginx-prod{1..2} name-`  
+`kubectl describe po nginx-dev{1..3} | grep -i annotations`  
+`kubectl describe po nginx-prod{1..2} | grep -i annotations`  
 
-kubectl create deploy webapp --image=nginx:1.17.1 --dry-run -o yaml > webapp.yaml
-// add the port section and create the deployment
-kubectl create -f webapp.yaml
-// verify
-kubectl describe deploy webapp | grep Image
+57. Remove all the pods that we created so far  
+`kubectl delete po --all`  
 
-webapp.yaml
-68. Update the deployment with the image version 1.17.4 and verify
+58. Create a deployment called webapp with image nginx with 5 replicas  
+create webapp.yaml
+`kubectl create deploy webapp --image=nginx --dry-run -o yaml > webapp.yaml`  
+change the replicas to 5 in the yaml and create it  
+`kubectl create -f webapp.yaml`  
 
-kubectl set image deploy/webapp nginx=nginx:1.17.4
-kubectl describe deploy webapp | grep Image
-69. Check the rollout history and make sure everything is ok after the update
+59. Get the deployment you just created with labels  
+`kubectl get deploy webapp --show-labels`  
 
-kubectl rollout history deploy webapp
-kubectl get deploy webapp --show-labels
-kubectl get rs -l app=webapp
-kubectl get po -l app=webapp
-70. Undo the deployment to the previous version 1.17.1 and verify Image has the previous version
+60. Output the yaml file of the deployment you just created  
+`kubectl get deploy webapp -o yaml`  
 
-kubectl rollout undo deploy webapp
-kubectl describe deploy webapp | grep Image
-71. Update the deployment with the image version 1.16.1 and verify the image and also check the rollout history
+61. Get the pods of this deployment  
+get the label of the deployment  
+`kubectl get deploy --show-labels`  
+get the pods with that label  
+`kubectl get pods -l app=webapp`  
 
-kubectl set image deploy/webapp nginx=nginx:1.16.1
-kubectl describe deploy webapp | grep Image
-kubectl rollout history deploy webapp
-72. Update the deployment to the Image 1.17.1 and verify everything is ok
+62. Scale the deployment from 5 replicas to 20 replicas and verify  
+`kubectl scale deploy webapp --replicas=20`  
+`kubectl get po -l app=webapp`  
 
-kubectl rollout undo deploy webapp --to-revision=3
-kubectl describe deploy webapp | grep Image
-kubectl rollout status deploy webapp
-73. Update the deployment with the wrong image version 1.100 and verify something is wrong with the deployment
+### Note: In Kubernetes, a deployment rollout status refers to the current state of a deployment's rollout process. It provides information about the progress and success of deploying changes to a deployment's underlying pods.  
 
-kubectl set image deploy/webapp nginx=nginx:1.100
-kubectl rollout status deploy webapp (still pending state)
-kubectl get pods (ImagePullErr)
-74. Undo the deployment with the previous version and verify everything is Ok
+When a deployment is updated with new configurations, such as a new image version or desired replica count, Kubernetes orchestrates a rollout process to ensure the changes are applied gradually and with minimal disruption to the running application. The rollout process includes scaling up/down replicas, updating pods, and monitoring the status of the deployment.   
 
-kubectl rollout undo deploy webapp
-kubectl rollout status deploy webapp
-kubectl get pods
-75. Check the history of the specific revision of that deployment
 
-kubectl rollout history deploy webapp --revision=7
-76. Pause the rollout of the deployment
+63. Get the deployment rollout status  
+`kubectl rollout status deploy webapp`  
 
-kubectl rollout pause deploy webapp
-77. Update the deployment with the image version latest and check the history and verify nothing is going on
+64. Get the replicaset that created with this deployment  
+`kubectl get rs -l app=webapp`  
 
-kubectl set image deploy/webapp nginx=nginx:latest
-kubectl rollout history deploy webapp (No new revision)
-78. Resume the rollout of the deployment
+65. Get the yaml of the replicaset and pods of this deployment  
+`kubectl get rs -l app=webapp -o yaml`  
+`kubectl get po -l app=webapp -o yaml`  
 
-kubectl rollout resume deploy webapp
-79. Check the rollout history and verify it has the new version
+66. Delete the deployment you just created and watch all the pods are also being deleted  
+`kubectl delete deploy webapp`  
+`kubectl get po -l app=webapp -w`  
 
-kubectl rollout history deploy webapp
-kubectl rollout history deploy webapp --revision=9
+67. Create a deployment of webapp with image nginx:1.17.1 with container port 80 and verify the image version  
+create webapp.yaml
+`kubectl create deploy webapp --image=nginx:1.17.1 --dry-run -o yaml > webapp.yaml`  
+add the port section and create the deployment  
+`kubectl create -f webapp.yaml`  
+verify  
+`kubectl describe deploy webapp | grep Image`  
+
+68. Update the deployment with the image version 1.17.4 and verify  
+`kubectl set image deploy/webapp nginx=nginx:1.17.4`  
+`kubectl describe deploy webapp | grep Image`  
+
+69. Check the rollout history and make sure everything is ok after the update  
+`kubectl rollout history deploy webapp`  
+`kubectl get deploy webapp --show-labels`  
+`kubectl get rs -l app=webapp`  
+`kubectl get po -l app=webapp`  
+
+70. Undo the deployment to the previous version 1.17.1 and verify Image has the previous version  
+`kubectl rollout undo deploy webapp`   
+`kubectl describe deploy webapp | grep Image`  
+
+71. Update the deployment with the image version 1.16.1 and verify the image and also check the rollout history  
+`kubectl set image deploy/webapp nginx=nginx:1.16.1`  
+`kubectl describe deploy webapp | grep Image`  
+`kubectl rollout history deploy webapp`  
+
+72. Update the deployment to the Image 1.17.1 and verify everything is ok  
+`kubectl rollout undo deploy webapp --to-revision=3`  
+`kubectl describe deploy webapp | grep Image`  
+`kubectl rollout status deploy webapp`  
+
+73. Update the deployment with the wrong image version 1.100 and verify something is wrong with the deployment  
+`kubectl set image deploy/webapp nginx=nginx:1.100`  
+`kubectl rollout status deploy webapp (still pending state)`  
+`kubectl get pods (ImagePullErr)`  
+
+
+74. Undo the deployment with the previous version and verify everything is Ok  
+`kubectl rollout undo deploy webapp`  
+`kubectl rollout status deploy webapp`  
+`kubectl get pods`  
+
+75. Check the history of the specific revision of that deployment  
+`kubectl rollout history deploy webapp --revision=7`  
+
+76. Pause the rollout of the deployment  
+`kubectl rollout pause deploy webapp`  
+
+77. Update the deployment with the image version latest and check the history and verify nothing is going on  
+`kubectl set image deploy/webapp nginx=nginx:latest`  
+`kubectl rollout history deploy webapp (No new revision)`  
+
+78. Resume the rollout of the deployment  
+`kubectl rollout resume deploy webapp`  
+
+79. Check the rollout history and verify it has the new version  
+`kubectl rollout history deploy webapp`  
+`kubectl rollout history deploy webapp --revision=9`  
+
 80. Apply the autoscaling to this deployment with minimum 10 and maximum 20 replicas and target CPU of 85% and verify hpa is created and replicas are increased to 10 from 1
 
 kubectl autoscale deploy webapp --min=10 --max=20 --cpu-percent=85
